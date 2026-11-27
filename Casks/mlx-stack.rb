@@ -11,4 +11,18 @@ cask "mlx-stack" do
   depends_on macos: :sonoma
 
   app "MLX Stack.app"
+
+  postflight_steps do
+    run "/usr/bin/xattr",
+        args: ["-dr", "com.apple.quarantine", "{{appdir}}/MLX Stack.app"]
+  end
+
+  caveats do
+    <<~EOS
+      MLX Stack is ad-hoc signed. Homebrew verified the archive SHA-256 and
+      removed Gatekeeper quarantine from the verified app so its bundled uv
+      and backend can run. Direct ZIP installation requires the same explicit
+      xattr step documented in the README.
+    EOS
+  end
 end
